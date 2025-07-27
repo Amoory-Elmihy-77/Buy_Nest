@@ -5,37 +5,31 @@ import {
   actGetProductsByCatPrefix,
   productsCleanUp,
 } from "@store/products/productsSlice";
+import { Container } from "react-bootstrap";
+import { Loading } from "@components/feedback";
+import { GridList } from "@components/common";
 import { Product } from "@components/ecommerce";
-import { Col, Container, Row } from "react-bootstrap";
 
 export default function Products() {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const { records } = useAppSelector((state) => state.productsSlice);
+  const { loading, error, records } = useAppSelector(
+    (state) => state.productsSlice
+  );
   useEffect(() => {
     dispatch(actGetProductsByCatPrefix(params.prefix as string));
     return () => {
       dispatch(productsCleanUp());
     };
   }, [dispatch, params]);
-  const allProducts =
-    records.length > 0
-      ? records.map((rec) => {
-          return (
-            <Col
-              key={rec.id}
-              xs={6}
-              md={3}
-              className="d-flex justify-content-center mb-5 mt-2"
-            >
-              <Product {...rec} />
-            </Col>
-          );
-        })
-      : "There is no Product";
   return (
     <Container>
-      <Row>{allProducts}</Row>
+      <Loading status={loading} error={error}>
+        <GridList
+          records={records}
+          renderItem={(record) => <Product {...record} />}
+        />
+      </Loading>
     </Container>
   );
 }
