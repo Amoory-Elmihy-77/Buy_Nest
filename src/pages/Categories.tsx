@@ -1,4 +1,4 @@
-import { GridList } from "@components/common";
+import { GridList, Heading } from "@components/common";
 import { Category } from "@components/ecommerce";
 import { Loading } from "@components/feedback";
 import { actGetCategories } from "@store/categories/categoriesSlice";
@@ -16,6 +16,7 @@ export default function Categories() {
   }, [dispatch, records]);
   return (
     <Container>
+      <Heading>Categories</Heading>
       <Loading status={loading} error={error}>
         <GridList
           records={records}
