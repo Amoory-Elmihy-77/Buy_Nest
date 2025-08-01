@@ -3,11 +3,13 @@ import styles from "./styles.module.css";
 import { useAppSelector } from "@store/hooks";
 import { getCartTotalQuantitySelector } from "@store/cart/cartSlice";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { basketContainer, basketQuantity, pumpCartQuantity, basketCart } =
   styles;
 
 export default function HeaderBasket() {
+  const navigate = useNavigate();
   const totalQuantity = useAppSelector(getCartTotalQuantitySelector);
   const [isAnimate, setIsAnimate] = useState(false);
   const quantityStyle = `${basketQuantity} ${
@@ -26,7 +28,7 @@ export default function HeaderBasket() {
     return () => clearTimeout(debounce);
   }, [totalQuantity]);
   return (
-    <div className={basketContainer}>
+    <div className={basketContainer} onClick={() => navigate("/cart")}>
       <div className={basketCart}>
         <Logo title="basket logo" />
         <div className={quantityStyle}>{totalQuantity}</div>
