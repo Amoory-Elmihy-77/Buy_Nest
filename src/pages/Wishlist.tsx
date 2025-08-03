@@ -1,45 +1,40 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import {
-  actGetProductsByCatPrefix,
-  productsCleanUp,
-} from "@store/products/productsSlice";
+  actGetWishlist,
+  productFullInfoCleanUp,
+} from "@store/wishlist/wishlistSlice";
+import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { Loading } from "@components/feedback";
 import { GridList, Heading } from "@components/common";
 import { Product } from "@components/ecommerce";
 
-export default function Products() {
-  const params = useParams();
+export default function Wishlist() {
   const dispatch = useAppDispatch();
-  const { loading, error, records } = useAppSelector(
-    (state) => state.productsSlice
+  const { loading, error, productFullInfo } = useAppSelector(
+    (state) => state.wishlistSlice
   );
   const cartItems = useAppSelector((state) => state.cartSlice.items);
   const wishlistItemsId = useAppSelector(
     (state) => state.wishlistSlice.itemsId
   );
-  const productsFullInfo = records.map((el) => ({
+  useEffect(() => {
+    dispatch(actGetWishlist());
+    return () => {
+      dispatch(productFullInfoCleanUp());
+    };
+  }, [dispatch, wishlistItemsId]);
+  const wishlistProductsFullInfo = productFullInfo.map((el) => ({
     ...el,
     quantity: cartItems[el.id] || 0,
     isLiked: wishlistItemsId.includes(el.id),
   }));
-
-  useEffect(() => {
-    dispatch(actGetProductsByCatPrefix(params.prefix as string));
-    return () => {
-      dispatch(productsCleanUp());
-    };
-  }, [dispatch, params]);
   return (
     <Container>
-      <Heading>
-        <span className="text-capitalize">{params.prefix}</span> Products
-      </Heading>
+      <Heading>Your WishList</Heading>
       <Loading status={loading} error={error}>
         <GridList
-          records={productsFullInfo}
+          records={wishlistProductsFullInfo}
           renderItem={(record) => <Product {...record} />}
         />
       </Loading>

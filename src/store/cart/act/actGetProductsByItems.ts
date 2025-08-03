@@ -15,7 +15,7 @@ const actGetProductsByItems = createAsyncThunk(
     try {
       const concatenatedItemsID = itemsId.map((it) => `id=${it}`).join("&");
       const response = await axios.get<TResponse>(
-        `http://localhost:5005/products?${concatenatedItemsID}`
+        `/products?${concatenatedItemsID}`
       );
       return response.data;
     } catch (error) {
