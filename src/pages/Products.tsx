@@ -11,6 +11,7 @@ export default function Products() {
       <Heading title={`${paramsPerfix?.toUpperCase()} Products`} />
       <Loading status={loading} error={error} type={"product"}>
         <GridList
+          emptyMessage="there is no products"
           records={productsFullInfo}
           renderItem={(record) => <Product {...record} />}
         />

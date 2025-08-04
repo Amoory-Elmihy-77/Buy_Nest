@@ -1,6 +1,7 @@
 import { Heading } from "@components/common";
 import { CartItemList, CartSubtotalPrice } from "@components/ecommerce";
 import { Loading } from "@components/feedback";
+import LottieHandler from "@components/feedback/LottieHandler/LottieHandler";
 import useCart from "@hooks/useCart";
 
 export default function Cart() {
@@ -20,7 +21,7 @@ export default function Cart() {
             <CartSubtotalPrice products={products} />
           </>
         ) : (
-          <h4 className="text-center">Your Cart is empty</h4>
+          <LottieHandler type="empty" message="Your cart is empty" />
         )}
       </Loading>
     </>

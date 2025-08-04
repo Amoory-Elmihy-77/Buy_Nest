@@ -11,6 +11,7 @@ export default function Wishlist() {
       <Heading title="Your WishList" />
       <Loading status={loading} error={error} type="product">
         <GridList
+          emptyMessage="Your wishlist is empty"
           records={wishlistProductsFullInfo}
           renderItem={(record) => <Product {...record} />}
         />
