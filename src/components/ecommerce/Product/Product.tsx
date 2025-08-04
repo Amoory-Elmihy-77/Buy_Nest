@@ -2,7 +2,7 @@ import { Button, Spinner } from "react-bootstrap";
 import styles from "./styles.module.css";
 import Like from "@assets/svg/like.svg?react";
 import LikeFill from "@assets/svg/like-fill.svg?react";
-import type { TProduct } from "@customTypes/product";
+import type { TProduct } from "@types";
 import { useAppDispatch } from "@store/hooks";
 import { addToCart } from "@store/cart/cartSlice";
 import { memo, useEffect, useState } from "react";

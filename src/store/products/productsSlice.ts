@@ -1,5 +1,4 @@
-import type { TProduct } from "@customTypes/product";
-import type { TLoading } from "@customTypes/shared";
+import { type TProduct, type TLoading, isString } from "@types";
 import { createSlice } from "@reduxjs/toolkit";
 import actGetProductsByCatPrefix from "./act/actGetProductsByCatPrefix";
 
@@ -35,8 +34,7 @@ const productsSlice = createSlice({
     builder.addCase(actGetProductsByCatPrefix.rejected, (state, action) => {
       state.loading = "failed";
       // state.error = action.payload as string;
-      if (action.payload && typeof action.payload === "string")
-        state.error = action.payload;
+      if (isString(action.payload)) state.error = action.payload;
     });
   },
 });
