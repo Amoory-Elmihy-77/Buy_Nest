@@ -9,7 +9,7 @@ export default function Wishlist() {
   return (
     <Container>
       <Heading title="Your WishList" />
-      <Loading status={loading} error={error}>
+      <Loading status={loading} error={error} type="product">
         <GridList
           records={wishlistProductsFullInfo}
           renderItem={(record) => <Product {...record} />}

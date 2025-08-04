@@ -9,7 +9,7 @@ export default function Products() {
   return (
     <Container>
       <Heading title={`${paramsPerfix?.toUpperCase()} Products`} />
-      <Loading status={loading} error={error}>
+      <Loading status={loading} error={error} type={"product"}>
         <GridList
           records={productsFullInfo}
           renderItem={(record) => <Product {...record} />}
