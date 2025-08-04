@@ -13,9 +13,10 @@ export default function useCart() {
     (state) => state.cartSlice
   );
   useEffect(() => {
-    dispatch(actGetProductsByItems());
+    const promise = dispatch(actGetProductsByItems());
     return () => {
       dispatch(cleanUpCartItems());
+      promise.abort();
     };
   }, [dispatch]);
   const products = productsFullInfo.map((el) => {

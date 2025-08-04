@@ -11,9 +11,10 @@ export default function useCategories() {
   );
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(actGetCategories());
+    const promise = dispatch(actGetCategories());
     return () => {
       dispatch(cleanUpCategories());
+      promise.abort();
     };
   }, [dispatch]);
   return { loading, error, records };

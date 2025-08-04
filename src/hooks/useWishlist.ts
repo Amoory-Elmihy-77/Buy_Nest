@@ -15,9 +15,10 @@ export default function useWishlist() {
     (state) => state.wishlistSlice.itemsId
   );
   useEffect(() => {
-    dispatch(actGetWishlist());
+    const promise = dispatch(actGetWishlist());
     return () => {
       dispatch(productFullInfoCleanUp());
+      promise.abort();
     };
   }, [dispatch, wishlistItemsId]);
   const wishlistProductsFullInfo = productFullInfo.map((el) => ({

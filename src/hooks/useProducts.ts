@@ -24,9 +24,12 @@ export default function useProducts() {
   }));
 
   useEffect(() => {
-    dispatch(actGetProductsByCatPrefix(params.prefix as string));
+    const promise = dispatch(
+      actGetProductsByCatPrefix(params.prefix as string)
+    );
     return () => {
       dispatch(productsCleanUp());
+      promise.abort();
     };
   }, [dispatch, params]);
   return { loading, error, paramsPerfix, productsFullInfo };

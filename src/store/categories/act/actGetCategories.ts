@@ -8,9 +8,9 @@ type TResponse = TCategory[];
 const actGetCategories = createAsyncThunk(
   "categories/actGetCategories",
   async (_, thunkApi) => {
-    const { rejectWithValue } = thunkApi;
+    const { rejectWithValue, signal } = thunkApi;
     try {
-      const response = await axios.get<TResponse>("/categories");
+      const response = await axios.get<TResponse>("/categories", { signal });
       return response.data;
     } catch (error) {
       return rejectWithValue(axiosErrorHandler(error));
