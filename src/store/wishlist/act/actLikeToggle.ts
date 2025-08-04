@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { axiosErrorHandler } from "@util";
 import axios from "axios";
 
 const actLikeToggle = createAsyncThunk(
@@ -17,11 +18,7 @@ const actLikeToggle = createAsyncThunk(
         return { type: "add", id };
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data.message || error.message);
-      } else {
-        return rejectWithValue("Unexpected Error");
-      }
+      return rejectWithValue(axiosErrorHandler(error));
     }
   }
 );

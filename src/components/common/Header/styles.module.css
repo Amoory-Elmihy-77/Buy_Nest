@@ -27,3 +27,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.headerLeftBar >div:first-of-type{
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 2px solid black;
+}

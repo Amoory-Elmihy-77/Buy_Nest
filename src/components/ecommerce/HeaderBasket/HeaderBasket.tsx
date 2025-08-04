@@ -1,38 +1,16 @@
 import Logo from "@assets/svg/cart.svg?react";
-import styles from "./styles.module.css";
 import { useAppSelector } from "@store/hooks";
 import { getCartTotalQuantitySelector } from "@store/cart/cartSlice";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-const { container, totalNum, pumpQuantity, iconWrapper } = styles;
+import { HeaderCounter } from "@components/common";
 
 export default function HeaderBasket() {
-  const navigate = useNavigate();
   const totalQuantity = useAppSelector(getCartTotalQuantitySelector);
-  const [isAnimate, setIsAnimate] = useState(false);
-  const quantityStyle = `${totalNum} ${isAnimate ? pumpQuantity : ""}`;
-  useEffect(() => {
-    if (!totalQuantity) {
-      return;
-    }
-    setIsAnimate(true);
-
-    const debounce = setTimeout(() => {
-      setIsAnimate(false);
-    }, 300);
-
-    return () => clearTimeout(debounce);
-  }, [totalQuantity]);
   return (
-    <div className={container} onClick={() => navigate("/cart")}>
-      <div className={iconWrapper}>
-        <Logo title="basket logo" />
-        {totalQuantity > 0 && (
-          <div className={quantityStyle}>{totalQuantity}</div>
-        )}
-      </div>
-      <h3>Cart</h3>
-    </div>
+    <HeaderCounter
+      totalQuantity={totalQuantity}
+      title="Cart"
+      to="/cart"
+      svgIcon={<Logo />}
+    />
   );
 }
