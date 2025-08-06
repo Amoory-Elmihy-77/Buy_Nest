@@ -15,7 +15,7 @@ export default function useWishlist() {
     (state) => state.wishlistSlice.itemsId
   );
   useEffect(() => {
-    const promise = dispatch(actGetWishlist());
+    const promise = dispatch(actGetWishlist("productsFullInfo"));
     return () => {
       dispatch(productFullInfoCleanUp());
       promise.abort();
@@ -25,6 +25,7 @@ export default function useWishlist() {
     ...el,
     quantity: cartItems[el.id] || 0,
     isLiked: wishlistItemsId.includes(el.id),
+    isAuthenticated: true,
   }));
   return { loading, error, wishlistProductsFullInfo };
 }

@@ -1,59 +1,43 @@
-import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
+import useRegister from "@hooks/useRegister";
+import { Navigate } from "react-router-dom";
 import { Heading } from "@components/common";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { signUpSchema, type signUpType } from "@validations/signUpSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@components/forms";
-import useCheckEmailAvailability from "@hooks/useCheckEmailAvailability";
+import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
 
-export default function Register() {
+const Register = () => {
   const {
+    loading,
+    error,
+    accessToken,
+    formErrors,
+    emailAvailabilityStatus,
+    submitForm,
     register,
     handleSubmit,
-    formState: { errors },
-    getFieldState,
-    trigger,
-  } = useForm<signUpType>({
-    mode: "onBlur",
-    resolver: zodResolver(signUpSchema),
-  });
-  const {
-    emailAvailabilityStatus,
-    checkEmailAvailability,
-    enteredEmail,
-    resetCheckEmailAvailability,
-  } = useCheckEmailAvailability();
-  const emailOnBlurHandler = async (e: React.FocusEvent<HTMLInputElement>) => {
-    await trigger("email");
-    const value = e.target.value;
-    const { isDirty, invalid } = getFieldState("email");
-    if (isDirty && !invalid && enteredEmail !== value) {
-      // checker
-      checkEmailAvailability(value);
-    }
-    if (isDirty && invalid && enteredEmail) {
-      resetCheckEmailAvailability();
-    }
-  };
-  const onSubmit: SubmitHandler<signUpType> = (data) => console.log(data);
+    emailOnBlurHandler,
+  } = useRegister();
+
+  if (accessToken) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <>
       <Heading title="User Registration" />
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={handleSubmit(submitForm)}>
             <Input
               label="First Name"
               name="firstName"
               register={register}
-              error={errors.firstName?.message}
+              error={formErrors.firstName?.message}
             />
             <Input
               label="Last Name"
               name="lastName"
               register={register}
-              error={errors.lastName?.message}
+              error={formErrors.lastName?.message}
             />
             <Input
               label="Email Address"
@@ -61,8 +45,8 @@ export default function Register() {
               register={register}
               onBlur={emailOnBlurHandler}
               error={
-                errors.email?.message
-                  ? errors.email?.message
+                formErrors.email?.message
+                  ? formErrors.email?.message
                   : emailAvailabilityStatus === "notAvailable"
                   ? "This email is already in use."
                   : emailAvailabilityStatus === "failed"
@@ -86,21 +70,41 @@ export default function Register() {
               label="Password"
               name="password"
               register={register}
-              error={errors.password?.message}
+              error={formErrors.password?.message}
             />
             <Input
               type="password"
               label="Confirm Password"
               name="confirmPassword"
               register={register}
-              error={errors.confirmPassword?.message}
+              error={formErrors.confirmPassword?.message}
             />
-            <Button variant="info" className="text-white" type="submit">
-              Submit
+            <Button
+              variant="info"
+              type="submit"
+              style={{ color: "white" }}
+              disabled={
+                emailAvailabilityStatus === "checking" || loading === "pending"
+                  ? true
+                  : false
+              }
+            >
+              {loading === "pending" ? (
+                <>
+                  <Spinner animation="border" size="sm"></Spinner> Loading...
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
+            {error && (
+              <p style={{ color: "#DC3545", marginTop: "10px" }}>{error}</p>
+            )}
           </Form>
         </Col>
       </Row>
     </>
   );
-}
+};
+
+export default Register;

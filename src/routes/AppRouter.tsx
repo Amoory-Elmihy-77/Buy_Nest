@@ -9,10 +9,12 @@ const Login = lazy(() => import("@pages/Login"));
 const Products = lazy(() => import("@pages/Products"));
 const Register = lazy(() => import("@pages/Register"));
 const Wishlist = lazy(() => import("@pages/Wishlist"));
+const Profile = lazy(() => import("@pages/Profile"));
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Error from "@pages/Error";
 import SuspenseFallback from "@components/feedback/SuspenseFallback/SuspenseFallback";
 import LottieHandler from "@components/feedback/LottieHandler/LottieHandler";
+import ProtectedRoute from "@components/Auth/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -85,9 +87,11 @@ const router = createBrowserRouter([
       {
         path: "wishlist",
         element: (
-          <SuspenseFallback>
-            <Wishlist />
-          </SuspenseFallback>
+          <ProtectedRoute>
+            <SuspenseFallback>
+              <Wishlist />
+            </SuspenseFallback>
+          </ProtectedRoute>
         ),
       },
       {
@@ -104,6 +108,16 @@ const router = createBrowserRouter([
           <SuspenseFallback>
             <Register />
           </SuspenseFallback>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <SuspenseFallback>
+              <Profile />
+            </SuspenseFallback>
+          </ProtectedRoute>
         ),
       },
     ],

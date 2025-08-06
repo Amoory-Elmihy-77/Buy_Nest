@@ -17,10 +17,14 @@ export default function useProducts() {
   const wishlistItemsId = useAppSelector(
     (state) => state.wishlistSlice.itemsId
   );
+  const userAccessToken = useAppSelector(
+    (state) => state.authSlice.accessToken
+  );
   const productsFullInfo = records.map((el) => ({
     ...el,
     quantity: cartItems[el.id] || 0,
     isLiked: wishlistItemsId.includes(el.id),
+    isAuthenticated: userAccessToken ? true : false,
   }));
 
   useEffect(() => {
