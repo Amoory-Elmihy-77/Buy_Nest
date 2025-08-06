@@ -66,7 +66,9 @@ export default function Header() {
                   <NavDropdown.Item as={NavLink} to="profile">
                     Profile
                   </NavDropdown.Item>
-                  <NavDropdown.Item>Orders</NavDropdown.Item>
+                  <NavDropdown.Item as={NavLink} to="profile/orders">
+                    Orders
+                  </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item
                     as={NavLink}

@@ -1,6 +1,9 @@
 import { lazy, Suspense } from "react";
 
 const MainLayout = lazy(() => import("@layouts/MainLayout/MainLayout"));
+const ProfileLayout = lazy(
+  () => import("@layouts/ProfileLayout/ProfileLayout")
+);
 const AboutUs = lazy(() => import("@pages/AboutUs"));
 const Cart = lazy(() => import("@pages/Cart"));
 const Categories = lazy(() => import("@pages/Categories"));
@@ -9,7 +12,8 @@ const Login = lazy(() => import("@pages/Login"));
 const Products = lazy(() => import("@pages/Products"));
 const Register = lazy(() => import("@pages/Register"));
 const Wishlist = lazy(() => import("@pages/Wishlist"));
-const Profile = lazy(() => import("@pages/Profile"));
+const Account = lazy(() => import("@pages/Account"));
+const Orders = lazy(() => import("@pages/Orders"));
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Error from "@pages/Error";
 import SuspenseFallback from "@components/feedback/SuspenseFallback/SuspenseFallback";
@@ -115,10 +119,28 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SuspenseFallback>
-              <Profile />
+              <ProfileLayout />
             </SuspenseFallback>
           </ProtectedRoute>
         ),
+        children: [
+          {
+            index: true,
+            element: (
+              <SuspenseFallback>
+                <Account />
+              </SuspenseFallback>
+            ),
+          },
+          {
+            path: "orders",
+            element: (
+              <SuspenseFallback>
+                <Orders />
+              </SuspenseFallback>
+            ),
+          },
+        ],
       },
     ],
   },

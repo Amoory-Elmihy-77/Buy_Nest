@@ -1,9 +1,9 @@
 import type { TProduct } from "@types";
 import styles from "./styles.module.css";
 import { Button, Form } from "react-bootstrap";
+import ProductInfo from "../ProductInfo/ProductInfo";
 
-const { cartItem, product, productImg, productInfo, cartItemSelection } =
-  styles;
+const { cartItem, cartItemSelection } = styles;
 
 type TCartItem = TProduct & {
   changeQuanHandler: (id: number, quantity: number) => void;
@@ -19,6 +19,7 @@ export default function CartItem({
   changeQuanHandler,
   removeItemHandler,
 }: TCartItem) {
+  // render list
   const renderQuan = Array(max)
     .fill(0)
     .map((_, idx) => {
@@ -35,23 +36,16 @@ export default function CartItem({
   };
   return (
     <div className={cartItem}>
-      <div className={product}>
-        <div className={productImg}>
-          <img width={120} src={img} alt={title} />
-        </div>
-        <div className={productInfo}>
-          <h2>{title}</h2>
-          <h3>{price} EGP</h3>
-          <Button
-            variant="secondary"
-            style={{ color: "white", width: "100px" }}
-            className="mt-auto"
-            onClick={() => removeItemHandler(id)}
-          >
-            Remove
-          </Button>
-        </div>
-      </div>
+      <ProductInfo title={title} price={price} img={img} direction="column">
+        <Button
+          variant="secondary"
+          style={{ color: "white", width: "100px" }}
+          className="mt-auto"
+          onClick={() => removeItemHandler(id)}
+        >
+          Remove
+        </Button>
+      </ProductInfo>
 
       <div className={cartItemSelection}>
         <span className="d-block mb-1">Quantity</span>

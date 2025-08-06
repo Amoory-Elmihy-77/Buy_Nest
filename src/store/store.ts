@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
-  persistReducer,
   persistStore,
+  persistReducer,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -15,30 +15,33 @@ import productsSlice from "./products/productsSlice";
 import cartSlice from "./cart/cartSlice";
 import wishlistSlice from "./wishlist/wishlistSlice";
 import authSlice from "./auth/authSlice";
+import ordersSlice from "./orders/ordersSlice";
 
 const rootPersistConfig = {
   key: "root",
   storage,
-  whiteList: ["cartSlice", "authSlice"],
+  whitelist: ["cartSlice", "authSlice"],
 };
 
 const authPersistConfig = {
   key: "authSlice",
   storage,
-  whiteList: ["user", "accessToken"],
+  whitelist: ["user", "accessToken"],
 };
+
 const cartPersistConfig = {
   key: "cartSlice",
   storage,
-  whiteList: ["items"],
+  whitelist: ["items"],
 };
 
 const rootReducer = combineReducers({
+  authSlice: persistReducer(authPersistConfig, authSlice),
   categoriesSlice,
   productsSlice,
+  ordersSlice,
   cartSlice: persistReducer(cartPersistConfig, cartSlice),
   wishlistSlice: wishlistSlice,
-  authSlice: persistReducer(authPersistConfig, authSlice),
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
@@ -59,4 +62,5 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 const persistor = persistStore(store);
+
 export { store, persistor };

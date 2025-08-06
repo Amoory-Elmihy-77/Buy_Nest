@@ -1,29 +1,47 @@
-import { Heading } from "@components/common";
-import { CartItemList, CartSubtotalPrice } from "@components/ecommerce";
-import { Loading } from "@components/feedback";
-import LottieHandler from "@components/feedback/LottieHandler/LottieHandler";
 import useCart from "@hooks/useCart";
+import { Heading } from "@components/common";
+import { Loading } from "@components/feedback";
+import { CartItemList, CartSubtotalPrice } from "@components/ecommerce";
+import LottieHandler from "@components/feedback/LottieHandler/LottieHandler";
 
-export default function Cart() {
-  const { loading, error, products, changeQuanHandler, removeItemHandler } =
-    useCart();
+const Cart = () => {
+  const {
+    loading,
+    error,
+    products,
+    userAccessToken,
+    placeOrderStatus,
+    changeQuanHandler,
+    removeItemHandler,
+  } = useCart();
+
   return (
     <>
-      <Heading title="Cart" />
+      <Heading title="Your Cart" />
       <Loading status={loading} error={error} type="cart">
-        {products.length > 0 ? (
+        {products.length ? (
           <>
             <CartItemList
               products={products}
               changeQuanHandler={changeQuanHandler}
               removeItemHandler={removeItemHandler}
             />
-            <CartSubtotalPrice products={products} />
+            <CartSubtotalPrice
+              products={products}
+              userAccessToken={userAccessToken}
+            />
           </>
+        ) : placeOrderStatus === "succeeded" ? (
+          <LottieHandler
+            message="Your order has been placed successfully"
+            type="success"
+          />
         ) : (
-          <LottieHandler type="empty" message="Your cart is empty" />
+          <LottieHandler message="Your cart is empty" type="empty" />
         )}
       </Loading>
     </>
   );
-}
+};
+
+export default Cart;

@@ -1,45 +1,55 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
-import styles from "./styles.module.css";
+import { useEffect, useState, memo } from "react";
+import { useAppDispatch } from "@store/hooks";
+import { actLikeToggle } from "@store/wishlist/wishlistSlice";
+import { addToCart } from "@store/cart/cartSlice";
 import Like from "@assets/svg/like.svg?react";
 import LikeFill from "@assets/svg/like-fill.svg?react";
-import type { TProduct } from "@types";
-import { useAppDispatch } from "@store/hooks";
-import { addToCart } from "@store/cart/cartSlice";
-import { memo, useEffect, useState } from "react";
-import { actLikeToggle } from "@store/wishlist/wishlistSlice";
-const { product, productImg, maximumNotice, wishlistBtn } = styles;
+import ProductInfo from "../ProductInfo/ProductInfo";
+import { Button, Spinner, Modal } from "react-bootstrap";
+import { type TProduct } from "@types";
+
+import styles from "./styles.module.css";
+const { maximumNotice, wishlistBtn } = styles;
 
 const Product = memo(
   ({
     id,
-    img,
     title,
     price,
+    img,
     max,
     quantity,
     isLiked,
     isAuthenticated,
   }: TProduct) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false);
     const dispatch = useAppDispatch();
-    const [isDisabled, setIsDisabled] = useState(false);
 
-    const currentRemainingQuan = max - (quantity ?? 0);
-    const isQunaReachToMax = currentRemainingQuan <= 0 ? true : false;
-    const addToCartHandler = () => {
-      dispatch(addToCart(id));
-      setIsDisabled(true);
-    };
+    const [showModal, setShowModal] = useState(false);
+    const [isBtnDisabled, setIsBtnDisabled] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const currentRemainingQuantity = max - (quantity ?? 0);
+
+    const quantityReachedToMax = currentRemainingQuantity <= 0 ? true : false;
+
     useEffect(() => {
-      if (!isDisabled) return;
-      setIsDisabled(true);
+      if (!isBtnDisabled) {
+        return;
+      }
 
       const debounce = setTimeout(() => {
-        setIsDisabled(false);
+        setIsBtnDisabled(false);
       }, 300);
+
       return () => clearTimeout(debounce);
-    }, [isDisabled]);
+    }, [isBtnDisabled]);
+
+    const addToCartHandler = () => {
+      dispatch(addToCart(id));
+      setIsBtnDisabled(true);
+    };
+
     const likeToggleHandler = () => {
       if (isAuthenticated) {
         if (!isLoading) {
@@ -64,7 +74,8 @@ const Product = memo(
             You need to login first to add this item to your wishlist.
           </Modal.Body>
         </Modal>
-        <div className={product}>
+
+        <ProductInfo title={title} price={price} img={img}>
           <div className={wishlistBtn} onClick={likeToggleHandler}>
             {isLoading ? (
               <Spinner animation="border" size="sm" variant="primary" />
@@ -74,36 +85,26 @@ const Product = memo(
               <Like />
             )}
           </div>
-          <div className={productImg}>
-            <img src={img} alt={title} />
-          </div>
-          <h2>{title}</h2>
-          <h3>{price} EGP</h3>
-          <h3 className={maximumNotice}>
-            {isQunaReachToMax
-              ? "sold out"
-              : `You can add ${currentRemainingQuan} item[s]`}
-          </h3>
+          <p className={maximumNotice}>
+            {quantityReachedToMax
+              ? "You reached to the limit"
+              : `You can add ${currentRemainingQuantity} item(s)`}
+          </p>
           <Button
             variant="info"
-            style={{ color: "white" }}
+            style={{ color: "white", width: "100%" }}
             onClick={addToCartHandler}
-            disabled={isDisabled || isQunaReachToMax}
+            disabled={isBtnDisabled || quantityReachedToMax}
           >
-            {isDisabled ? (
+            {isBtnDisabled ? (
               <>
-                <Spinner
-                  style={{ marginRight: "4px" }}
-                  animation="border"
-                  size="sm"
-                />
-                Loading...
+                <Spinner animation="border" size="sm" /> Loading...
               </>
             ) : (
               "Add to cart"
             )}
           </Button>
-        </div>
+        </ProductInfo>
       </>
     );
   }
