@@ -1,6 +1,7 @@
 import { type TProduct, type TLoading, isString } from "@types";
 import { createSlice } from "@reduxjs/toolkit";
 import actGetProductsByCatPrefix from "./act/actGetProductsByCatPrefix";
+import actGetBestProducts from "./act/actGetBestProducts";
 
 interface IProductState {
   records: TProduct[];
@@ -36,9 +37,21 @@ const productsSlice = createSlice({
       // state.error = action.payload as string;
       if (isString(action.payload)) state.error = action.payload;
     });
+    builder.addCase(actGetBestProducts.pending, (state) => {
+      state.loading = "pending";
+      state.error = null;
+    });
+    builder.addCase(actGetBestProducts.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.records = action.payload;
+    });
+    builder.addCase(actGetBestProducts.rejected, (state, action) => {
+      state.loading = "failed";
+      if (isString(action.payload)) state.error = action.payload;
+    });
   },
 });
 
 export const { productsCleanUp } = productsSlice.actions;
-export { actGetProductsByCatPrefix };
+export { actGetProductsByCatPrefix, actGetBestProducts };
 export default productsSlice.reducer;
